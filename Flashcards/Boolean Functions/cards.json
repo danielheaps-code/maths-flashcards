@@ -1,0 +1,18 @@
+{
+  "definitions": [
+    {
+      "question": "What is a normal subgroup?",
+      "answer": "A subgroup $N\\le G$ is normal if $gNg^{-1}=N$ for every $g\\in G$."
+    }
+  ],
+  "results": [
+    {
+      "question": "State the First Isomorphism Theorem.",
+      "answer": "If $\\varphi:G\\to H$ is a group homomorphism, then $G/\\ker(\\varphi)\\cong\\operatorname{im}(\\varphi)$."
+    },
+    {
+      "question": "What is the order of a subgroup of a finite group?",
+      "answer": "By Lagrange's theorem, if $G$ is finite and $H\\le G$, then $|H|\\mid |G|$."
+    }
+  ]
+}

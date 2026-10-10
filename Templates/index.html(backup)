@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Maths Flashcards</title>
+    <style>
+        .flashcard-box {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 1200px;
+            height: min(560px, 70vh);
+            margin: 25px auto 15px;
+            padding: 24px;
+            border: 2px solid black;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+
+        .flashcard-box h2 {
+            font-family: "Latin Modern Roman", "Computer Modern", serif;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            line-height: 1.5;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+            color: #f0f2f3;
+        }
+
+
+        .answer {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-top: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+
+        h1 {
+            text-align: center;
+        }
+
+        body body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background: white;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px #00000012;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 7px 16px;
+            margin: 6px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .answer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            padding: 40px 20px;
+        }
+
+
+        .folder-panel {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 28px;
+            background: #252b30;
+            color: #f1f5f9;
+            border: 1px solid #454d54;
+            border-radius: 8px;
+            box-shadow: 0 8px 30px #00000055;
+        }
+
+
+        .folder-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .folder {
+            background: #e0eafe;
+            padding: 18px;
+            border-radius: 5px;
+            color: #2456a6;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 15px auto;
+            flex-wrap: wrap;
+        }
+
+        .toolbar .controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar #counter {
+            white-space: nowrap;
+            margin: 0;
+        }
+
+        .toolbar button {
+            margin: 0;
+        }
+
+        /* Dark hacker-style background */
+        body {
+            background: #080d12;
+            color: #e5e7eb;
+        }
+
+
+        /* Keep the website content in front of the binary background */
+        body>h1,
+        body>#folderScreen,
+        body>#flashcardScreen {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Blackboard-grey flashcard */
+        .flashcard-box {
+            background: #42484d;
+            color: #f5f5f5;
+            border: 2px solid #a7afb5;
+            border-radius: 4px;
+        }
+
+        .flashcard-box h2 {
+            color: #ffffff;
+        }
+
+        .answer {
+            color: #e5e7eb;
+            border-top-color: #747d84;
+        }
+
+        /* Blackboard-grey buttons */
+        button {
+            background: #454b50;
+            color: #f5f5f5;
+            border: 1px solid #8b949b;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #606970;
+        }
+
+        /* Match the topic-selection panel to the dark theme */
+        .folder-panel {
+            background: #252b30;
+            color: #f1f5f9;
+        }
+
+
+        .folder {
+            background: #343b41;
+            padding: 22px;
+            border-radius: 5px;
+            color: #e5e7eb;
+            border: 1px solid #59636b;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .folder:hover {
+            background: #454e56;
+            border-color: #39ff88;
+        }
+
+        #categoryScreen {
+            background: rgba(37, 43, 48, 0.62);
+            backdrop-filter: blur(3px);
+        }
+
+        #categoryScreen .folder {
+            background: rgba(52, 59, 65, 0.58);
+            color: #ffffff;
+        }
+
+        #categoryScreen .folder small {
+            display: block;
+            margin-top: 8px;
+            color: #d3dbe1;
+        }
+
+        #colorScreen .red-folder {
+            background: rgba(130, 38, 38, 0.9);
+            border-color: #e07a7a;
+            color: #ffffff;
+        }
+
+        #colorScreen .green-folder {
+            background: rgba(31, 112, 63, 0.9);
+            border-color: #6ac98c;
+            color: #ffffff;
+        }
+
+        #colorScreen {
+            background: rgba(37, 43, 48, 0.62);
+            backdrop-filter: blur(3px);
+        }
+
+        #colorScreen .folder small {
+            display: block;
+            margin-top: 8px;
+            color: #f1f5f9;
+        }
+
+        #colorScreen .red-folder:hover {
+            background: rgba(163, 48, 48, 0.92);
+        }
+
+        #colorScreen .green-folder:hover {
+            background: rgba(40, 137, 76, 0.92);
+        }
+
+        #flashcardScreen {
+            font-family: Arial, sans-serif;
+        }
+
+        #flashcardScreen .flashcard-box {
+            background: rgba(37, 43, 48, 0.62);
+            color: #f1f5f9;
+            border: 1px solid #454d54;
+            border-radius: 8px;
+        }
+
+        #flashcardScreen .flashcard-box h2 {
+            font-family: Arial, sans-serif;
+            font-weight: 600;
+            letter-spacing: 0;
+        }
+
+        #flashcardScreen button {
+            background: rgba(52, 59, 65, 0.58);
+            color: #ffffff;
+            border: 1px solid #59636b;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+        }
+
+        #flashcardScreen button:hover {
+            background: #454e56;
+            border-color: #39ff88;
+        }
+
+        #flashcardScreen .card-bin-button.red {
+            background: #a83232;
+            border-color: #e07777;
+        }
+
+        #flashcardScreen .card-bin-button.green {
+            background: #23804b;
+            border-color: #73d19a;
+        }
+
+        #flashcardScreen .card-bin-button.red:hover {
+            background: #c13b3b;
+        }
+
+        #flashcardScreen .card-bin-button.green:hover {
+            background: #2c9b5c;
+        }
+
+        #flashcardScreen button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        #matrixBackground {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        body>h1,
+        body>#folderScreen,
+        body>#flashcardScreen {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/latin-modern-roman@5.2.5/400.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/latin-modern-roman@5.2.5/300.css">
+
+</head>
+
+<body>
+
+    <canvas id="matrixBackground"></canvas>
+
+    <div class="folder-panel" id="folderScreen">
+        <div class="folder-grid">
+            <div class="folder" onclick="chooseTopic('Intro to Group Theory')">
+                📁 Intro to Group Theory
+            </div>
+            <div class="folder" onclick="chooseTopic('Galois Theory')">
+                📁 Galois Theory
+            </div>
+            <div class="folder" onclick="chooseTopic('Boolean Functions')">
+                📁 Boolean Functions
+            </div>
+            <div class="folder" onclick="chooseTopic('Commutative Algebra')">
+                📁 Commutative Algebra
+            </div>
+        </div>
+    </div>
+    <div class="folder-panel" id="categoryScreen" style="display: none;">
+        <h2 id="selectedTopic"></h2>
+        <p>Choose what you want to study:</p>
+        <div class="folder-grid">
+            <div class="folder" onclick="chooseCategory('definitions')">
+                📁 Definitions<br><small>Terms and concepts</small>
+            </div>
+            <div class="folder" onclick="chooseCategory('results')">
+                📁 Results<br><small>Lemmas, propositions and theorems</small>
+            </div>
+        </div>
+        <div class="toolbar">
+            <button onclick="backToTopics()">← Back to folders</button>
+        </div>
+    </div>
+    <div class="folder-panel" id="colorScreen" style="display: none;">
+        <h2 id="selectedBoxTopic"></h2>
+        <p id="selectedCategoryTitle"></p>
+        <p>Choose a card box:</p>
+        <div class="folder-grid">
+            <div class="folder red-folder" onclick="chooseCardBox('red')">
+                📁 Red box<br><small><span id="redCardCount">0</span> cards</small>
+            </div>
+            <div class="folder green-folder" onclick="chooseCardBox('green')">
+                📁 Green box<br><small><span id="greenCardCount">0</span> cards</small>
+            </div>
+        </div>
+        <div class="toolbar">
+            <button onclick="backToCategories()">← Back to definitions/results</button>
+        </div>
+    </div>
+    <div id="flashcardScreen" style="display: none;">
+
+
+        <div class="flashcard-box">
+            <h2 id="question"></h2>
+            <p id="answer" class="answer" style="display:none"></p>
+            <p id="emptyState" style="display:none"></p>
+        </div>
+
+        <div class="toolbar">
+            <button onclick="backToCardBoxes()">← Back to card boxes</button>
+
+            <div class="controls">
+                <button onclick="showAnswer()">Reveal answer</button>
+                <button onclick="previousCard()">←</button>
+                <button onclick="nextCard()">→</button>
+                <button class="card-bin-button red" onclick="classifyCurrentCard('red')">Mark red</button>
+                <button class="card-bin-button green" onclick="classifyCurrentCard('green')">Mark green</button>
+            </div>
+
+            <p id="counter"></p>
+        </div>
+
+        <script>
+            const sampleCards = [
+                {
+                    question: "State the First Isomorphism Theorem.",
+                    answer: "If $\\varphi:G\\to H$ is a group homomorphism, then $G/\\ker(\\varphi)\\cong\\operatorname{im}(\\varphi)$."
+                },
+                {
+                    question: "What is the order of a subgroup of a finite group?",
+                    answer: "By Lagrange's theorem, if $G$ is finite and $H\\le G$, then $|H|\\mid |G|$."
+                },
+                {
+                    question: "What is a normal subgroup?",
+                    answer: "A subgroup $N\\le G$ is normal if $gNg^{-1}=N$ for every $g\\in G$."
+                }
+            ];
+
+            const groupTheoryCards = [
+                {
+                    question: "1.11 — Define the general linear group $GL_n(F)$.",
+                    answer: "For a field $F$ and integer $n\\ge 1$, $GL_n(F)=\\{A\\in M_n(F):\\det(A)\\ne 0\\}$. It is the group of invertible $n\\times n$ matrices over $F$, under matrix multiplication."
+                },
+                {
+                    question: "1.19 — State the subgroup criterion.",
+                    answer: "For a nonempty subset $H\\subseteq G$, $H\\le G$ if and only if $h_1h_2^{-1}\\in H$ for all $h_1,h_2\\in H$."
+                },
+                {
+                    question: "1.23 — When are two left cosets equal?",
+                    answer: "If $H\\le G$ and $g,k\\in G$, then $k\\in gH\\iff gH=kH\\iff g^{-1}k\\in H$."
+                },
+                {
+                    question: "1.26 — State Lagrange's theorem.",
+                    answer: "If $G$ is a finite group and $H\\le G$, then $|H|$ divides $|G|$. In fact, $|G|=|G:H|\\,|H|$, where $|G:H|$ is the index of $H$ in $G$."
+                },
+                {
+                    question: "1.28 — What can be said about the order of an element of a finite group?",
+                    answer: "If $G$ is finite and $g\\in G$, then $|g|$ divides $|G|$, since $\\langle g\\rangle\\le G$ and $|\\langle g\\rangle|=|g|$."
+                },
+                {
+                    question: "1.29 — Define conjugation of an element and a subgroup.",
+                    answer: "For $g,x\\in G$, the conjugate of $x$ by $g$ is $gxg^{-1}$. For $H\\le G$, its conjugate by $g$ is $gHg^{-1}=\\{ghg^{-1}:h\\in H\\}$."
+                },
+                {
+                    question: "1.30 — Show that conjugation preserves element order.",
+                    answer: "For all $g,x\\in G$, $|gxg^{-1}|=|x|$, because $(gxg^{-1})^n=gx^ng^{-1}$ for every integer $n\\ge 0$."
+                },
+                {
+                    question: "1.31 — What is the conjugate of a subgroup?",
+                    answer: "If $H\\le G$ and $g\\in G$, then $gHg^{-1}\\le G$."
+                },
+                {
+                    question: "1.32 — Define a normal subgroup and the normaliser.",
+                    answer: "$H\\trianglelefteq G$ if and only if $gHg^{-1}=H$ for all $g\\in G$. The normaliser is $N_G(H)=\\{g\\in G:gHg^{-1}=H\\}$. Moreover, $N_G(H)\\le G$, $H\\le N_G(H)$, and $H\\trianglelefteq N_G(H)$."
+                },
+                {
+                    question: "1.33 — State the normality criterion.",
+                    answer: "For $H\\le G$, $H\\trianglelefteq G$ if and only if $gHg^{-1}\\subseteq H$ for every $g\\in G$."
+                },
+                {
+                    question: "1.34 — Define a simple group.",
+                    answer: "A group $G\\ne\\{1_G\\}$ is simple if its only normal subgroups are $\\{1_G\\}$ and $G$."
+                },
+                {
+                    question: "1.38 — Define the quotient group $G/N$.",
+                    answer: "If $N\\trianglelefteq G$, then $G/N=\\{gN:g\\in G\\}$, with operation $(gN)(hN)=ghN$. Its identity is $N$ and $(gN)^{-1}=g^{-1}N$. If $G$ is finite, $|G/N|=|G|/|N|$."
+                },
+                {
+                    question: "1.39 — Define a homomorphism, isomorphism, kernel and image.",
+                    answer: "A map $\\varphi:G\\to H$ is a homomorphism if $\\varphi(g_1g_2)=\\varphi(g_1)\\varphi(g_2)$ for all $g_1,g_2\\in G$. An isomorphism is a bijective homomorphism; then $G\\cong H$. The kernel is $\\ker\\varphi=\\{g\\in G:\\varphi(g)=1_H\\}$ and the image is $\\operatorname{Im}\\varphi=\\{\\varphi(g):g\\in G\\}$."
+                },
+                {
+                    question: "1.41 — State the First Isomorphism Theorem.",
+                    answer: "For a group homomorphism $\\varphi:G\\to H$, $\\ker\\varphi\\trianglelefteq G$, $\\operatorname{Im}\\varphi\\le H$, and $G/\\ker\\varphi\\cong\\operatorname{Im}\\varphi$. The isomorphism is given by $g\\ker\\varphi\\mapsto\\varphi(g)$."
+                },
+                {
+                    question: "1.43 — State the Second Isomorphism Theorem.",
+                    answer: "If $H\\le G$ and $N\\trianglelefteq G$, then $NH=HN\\le G$, $H\\cap N\\trianglelefteq H$, and $H/(H\\cap N)\\cong NH/N$."
+                },
+                {
+                    question: "1.44 — State the Third Isomorphism Theorem.",
+                    answer: "If $N,K\\trianglelefteq G$ and $N\\le K$, then $K/N\\trianglelefteq G/N$ and $(G/N)/(K/N)\\cong G/K$."
+                },
+                {
+                    question: "1.45 — State the Correspondence Theorem.",
+                    answer: "If $N\\trianglelefteq G$, there is a bijection between subgroups $J\\le G$ with $N\\le J$ and subgroups $X\\le G/N$, given by $J\\mapsto J/N$. Its inverse is $X\\mapsto\\{g\\in G:gN\\in X\\}$. For $N\\le J\\le G$, $J\\trianglelefteq G$ if and only if $J/N\\trianglelefteq G/N$."
+                }
+            ];
+
+            const topicCards = {
+                "Intro to Group Theory": groupTheoryCards,
+                "Galois Theory": sampleCards,
+                "Boolean Functions": sampleCards,
+                "Commutative Algebra": sampleCards
+            };
+
+            let selectedTopic = "";
+            let selectedCategory = "";
+            let selectedCardBox = "red";
+            let categoryCards = [];
+            let cardAssignments = {};
+            let cards = sampleCards;
+            let current = 0;
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "ArrowRight") {
+                    nextCard();
+                } else if (event.key === "ArrowLeft") {
+                    previousCard();
+                }
+            });
+
+            function displayCard() {
+                const question = document.getElementById("question");
+                const answer = document.getElementById("answer");
+                const emptyState = document.getElementById("emptyState");
+                const cardButtons = document.querySelectorAll("#flashcardScreen .controls button");
+
+                if (window.MathJax && MathJax.typesetClear) {
+                    MathJax.typesetClear([question, answer]);
+                }
+
+                if (cards.length === 0) {
+                    question.style.display = "none";
+                    answer.style.display = "none";
+                    emptyState.style.display = "block";
+                    emptyState.textContent = `There are no cards in the ${selectedCardBox} box yet.`;
+                    document.getElementById("counter").textContent = "No cards";
+                    cardButtons.forEach(button => button.disabled = true);
+                    return;
+                }
+
+                cardButtons.forEach(button => button.disabled = false);
+                question.style.display = "";
+                emptyState.style.display = "none";
+                question.textContent = cards[current].question;
+                document.getElementById("counter").textContent =
+                    `Card ${current + 1} of ${cards.length}`;
+
+                answer.style.display = "none";
+                answer.textContent = cards[current].answer;
+
+                if (window.MathJax && MathJax.typesetPromise) {
+                    MathJax.typesetPromise([question]);
+                }
+            }
+
+            function showAnswer() {
+                const answer = document.getElementById("answer");
+
+                if (answer.style.display === "block") {
+                    answer.style.display = "none";
+                } else {
+                    answer.style.display = "block";
+
+                    if (window.MathJax && MathJax.typesetPromise) {
+                        MathJax.typesetPromise([answer]);
+                    }
+                }
+            }
+
+            function nextCard() {
+                if (cards.length === 0) return;
+                current = (current + 1) % cards.length;
+                displayCard();
+            }
+
+            function previousCard() {
+                if (cards.length === 0) return;
+                current = (current - 1 + cards.length) % cards.length;
+                displayCard();
+            }
+
+            function cardBoxFor(card) {
+                return cardAssignments[card.question] || "red";
+            }
+
+            function assignmentStorageKey() {
+                return `maths-flashcards:${selectedTopic}:${selectedCategory}`;
+            }
+
+            function loadCardAssignments() {
+                try {
+                    const savedAssignments = JSON.parse(
+                        localStorage.getItem(assignmentStorageKey()) || "{}"
+                    );
+                    cardAssignments = savedAssignments &&
+                        typeof savedAssignments === "object" &&
+                        !Array.isArray(savedAssignments) ? savedAssignments : {};
+                } catch {
+                    cardAssignments = {};
+                }
+            }
+
+            function saveCardAssignments() {
+                try {
+                    localStorage.setItem(assignmentStorageKey(), JSON.stringify(cardAssignments));
+                } catch {
+                    // Keep the current session usable if browser storage is unavailable.
+                }
+            }
+
+            function updateCardBoxCounts() {
+                const greenCount = categoryCards.filter(card => cardBoxFor(card) === "green").length;
+                document.getElementById("greenCardCount").textContent = greenCount;
+                document.getElementById("redCardCount").textContent = categoryCards.length - greenCount;
+            }
+
+            function chooseTopic(topic) {
+                selectedTopic = topic.trim();
+                document.getElementById("selectedTopic").textContent = selectedTopic;
+                document.getElementById("folderScreen").style.display = "none";
+                document.getElementById("categoryScreen").style.display = "block";
+            }
+
+            function chooseCategory(category) {
+                const topicCardsForTopic = topicCards[selectedTopic] || sampleCards;
+                selectedCategory = category;
+                categoryCards = topicCardsForTopic.filter(card => {
+                    const isDefinition = /\bDefine\b/i.test(card.question) ||
+                        card.question === "What is a normal subgroup?";
+                    return category === "definitions" ? isDefinition : !isDefinition;
+                });
+                loadCardAssignments();
+                updateCardBoxCounts();
+                document.getElementById("selectedBoxTopic").textContent = selectedTopic;
+                document.getElementById("selectedCategoryTitle").textContent =
+                    category === "definitions" ? "Definitions" : "Results";
+                document.getElementById("categoryScreen").style.display = "none";
+                document.getElementById("colorScreen").style.display = "block";
+            }
+
+            function chooseCardBox(box) {
+                selectedCardBox = box;
+                cards = categoryCards.filter(card => cardBoxFor(card) === box);
+                current = 0;
+
+                document.getElementById("colorScreen").style.display = "none";
+                document.getElementById("flashcardScreen").style.display = "block";
+
+                displayCard();
+            }
+
+            function backToCategories() {
+                document.getElementById("colorScreen").style.display = "none";
+                document.getElementById("categoryScreen").style.display = "block";
+            }
+
+            function backToCardBoxes() {
+                document.getElementById("flashcardScreen").style.display = "none";
+                document.getElementById("colorScreen").style.display = "block";
+            }
+
+            function classifyCurrentCard(box) {
+                if (cards.length === 0) return;
+
+                const card = cards[current];
+                if (cardBoxFor(card) === box) {
+                    current = (current + 1) % cards.length;
+                } else {
+                    cardAssignments[card.question] = box;
+                    saveCardAssignments();
+                    updateCardBoxCounts();
+                    cards = categoryCards.filter(candidate => cardBoxFor(candidate) === selectedCardBox);
+                    if (current >= cards.length) current = 0;
+                }
+
+                displayCard();
+            }
+
+            function backToTopics() {
+                document.getElementById("categoryScreen").style.display = "none";
+                document.getElementById("folderScreen").style.display = "block";
+            }
+
+            displayCard();
+        </script>
+
+        <script>
+            const canvas = document.getElementById("matrixBackground");
+            const ctx = canvas.getContext("2d");
+
+            const characters = "01";
+            const fontSize = 16;
+            let columns = 0;
+            let drops = [];
+            let speeds = [];
+            let matrixPaused = false;
+            let matrixAnimationFrame = null;
+
+            function resizeMatrix() {
+                const dpr = window.devicePixelRatio || 1;
+
+                canvas.width = window.innerWidth * dpr;
+                canvas.height = window.innerHeight * dpr;
+                canvas.style.width = window.innerWidth + "px";
+                canvas.style.height = window.innerHeight + "px";
+
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                columns = Math.ceil(window.innerWidth / fontSize);
+                drops = [];
+                speeds = [];
+
+                for (let i = 0; i < columns; i++) {
+                    drops.push(Math.random() * -100);
+                    speeds.push(0.25 + Math.random() * 1.2);
+                }
+
+                ctx.fillStyle = "#080d12";
+                ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            }
+
+            function drawMatrix() {
+                matrixAnimationFrame = null;
+                if (matrixPaused) return;
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                ctx.fillStyle = "rgba(8, 13, 18, 0.09)";
+                ctx.fillRect(0, 0, width, height);
+
+                ctx.font = fontSize + "px monospace";
+
+                for (let i = 0; i < columns; i++) {
+                    const digit = characters[
+                        Math.floor(Math.random() * characters.length)
+                    ];
+
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+
+                    const glow = Math.random();
+
+                    if (glow > 0.985) {
+                        ctx.fillStyle = "#d5ffe3";
+                        ctx.shadowColor = "#39ff88";
+                        ctx.shadowBlur = 12;
+                    } else if (glow > 0.8) {
+                        ctx.fillStyle = "#39ff88";
+                        ctx.shadowBlur = 0;
+                    } else {
+                        ctx.fillStyle = "#167b50";
+                        ctx.shadowBlur = 0;
+                    }
+
+                    ctx.fillText(digit, x, y);
+                    ctx.shadowBlur = 0;
+
+                    if (y > height && Math.random() > 0.975) {
+                        drops[i] = Math.random() * -30;
+                        speeds[i] = 0.25 + Math.random() * 1.2;
+                    }
+
+                    drops[i] += speeds[i];
+                }
+
+                matrixAnimationFrame = requestAnimationFrame(drawMatrix);
+            }
+            const folderScreen = document.getElementById("folderScreen");
+
+            const observer = new MutationObserver(() => {
+                const shouldPause = folderScreen.style.display === "none";
+                if (shouldPause === matrixPaused) return;
+
+                matrixPaused = shouldPause;
+                if (matrixPaused) {
+                    cancelAnimationFrame(matrixAnimationFrame);
+                    matrixAnimationFrame = null;
+                } else if (matrixAnimationFrame === null) {
+                    matrixAnimationFrame = requestAnimationFrame(drawMatrix);
+                }
+            });
+
+            observer.observe(folderScreen, {
+                attributes: true,
+                attributeFilter: ["style"]
+            });
+            window.addEventListener("resize", resizeMatrix);
+
+            resizeMatrix();
+            drawMatrix();
+        </script>
+</body>
+
+</body>
+
+</html>
